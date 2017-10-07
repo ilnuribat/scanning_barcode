@@ -1,8 +1,11 @@
-QT += qml quick gui
+QT += qml quick multimedia
 
 CONFIG += c++11
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    capture.cpp \
+    myvideosurface.cpp \
+    imageprovider.cpp
 
 RESOURCES += qml.qrc \
     images.qrc
@@ -32,3 +35,19 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 include(QZXing/QZXing.pri)
+
+HEADERS += \
+    capture.h \
+    myvideosurface.h \
+    imageprovider.h
+
+DISTFILES += \
+    android/AndroidManifest.xml \
+    android/gradle/wrapper/gradle-wrapper.jar \
+    android/gradlew \
+    android/res/values/libs.xml \
+    android/build.gradle \
+    android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradlew.bat
+
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android

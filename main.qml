@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.3
+import ru.dreamkas.phone 1.0
 
 ApplicationWindow {
     visible: true
@@ -8,30 +9,45 @@ ApplicationWindow {
     height: 480
     title: qsTr("Hello World")
 
-    SwipeView {
-        id: swipeView
-        anchors.fill: parent
-        currentIndex: tabBar.currentIndex
+    ColumnLayout {
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+            horizontalCenter: parent.horizontalCenter
+        }
+        width: parent.width * 0.45
 
-        Page1 {
+        Text {
+            text: "Status: " + capture.status
         }
 
-        Page {
-            Label {
-                text: qsTr("Second page")
-                anchors.centerIn: parent
+        Button {
+            text: "start"
+            onClicked: {
+                capture.start();
             }
+        }
+        Button {
+            text: "capture"
+            onClicked: {
+                capture.capture();
+            }
+        }
+        Button {
+            text: "stop"
+            onClicked: {
+                capture.stop();
+            }
+        }
+        Image {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            source: "image://images/"
+            cache: false
         }
     }
 
-    footer: TabBar {
-        id: tabBar
-        currentIndex: swipeView.currentIndex
-        TabButton {
-            text: qsTr("First")
-        }
-        TabButton {
-            text: qsTr("Second")
-        }
+    Capture {
+        id: capture
     }
 }
