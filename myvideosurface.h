@@ -17,7 +17,6 @@ class MyVideoSurface : public QAbstractVideoSurface
 
     bool present(const QVideoFrame &frame)
     {
-        Q_UNUSED(frame);
         // Handle the frame and do your processing
 
         qDebug() << frame;

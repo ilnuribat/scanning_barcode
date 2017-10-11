@@ -18,26 +18,30 @@ class Capture : public QObject
 public:
     explicit Capture(QObject *parent = nullptr);
     Q_PROPERTY(QString status READ status WRITE setStatus NOTIFY statusChanged)
-    Q_PROPERTY(QImage newPhoto READ newPhoto WRITE setNewPhoto NOTIFY newPhotoChanged)
+    Q_PROPERTY(QString url READ url WRITE setUrl NOTIFY urlChanged)
 
     Q_INVOKABLE void start();
     Q_INVOKABLE void capture();
     Q_INVOKABLE void stop();
 
     QString status() const;
+    QString url() const;
 
 signals:
     void statusChanged();
+    void urlChanged();
 public slots:
 private:
     void cameraNames();
     bool checkCameraAvailability();
 
     void setStatus(QString status);
+    void setUrl(QString url);
 
     QCamera *camera;
     QCameraImageCapture *imageCapture;
     QString m_status;
+    QString m_url;
 };
 
 #endif // CAPTURE_H

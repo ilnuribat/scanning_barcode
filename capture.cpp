@@ -11,10 +11,14 @@ Capture::Capture(QObject *parent) : QObject(parent)
 
     connect(imageCapture, &QCameraImageCapture::imageCaptured, [=] (int id, const QImage &preview) {
         qDebug() << "Image captured! " << id << preview;
+        QString url = "captured_" + QString::number(id);
+        preview.save(url);
 
         QZXing decoder;
         decoder.setDecoder(QZXing::DecoderFormat_EAN_13);
+
         QString result = decoder.decodeImage(preview);
+        this->setUrl(url);
         qDebug() << "decoding image from photo: " << result;
         if (result.length() > 0) {
             setStatus(result);
@@ -48,5 +52,10 @@ void Capture::setStatus(QString status) {
     this->m_status = status;
     emit statusChanged();
 }
+void Capture::setUrl(QString url) {
+    this->m_url = url;
+    emit urlChanged();
+}
 
-QString Capture::status() const { return this->m_status; }
+QString Capture::status()   const { return this->m_status; }
+QString Capture::url()      const { return this->m_url; }

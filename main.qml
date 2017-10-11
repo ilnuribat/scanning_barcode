@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.3
+import QtMultimedia 5.9
 import ru.dreamkas.phone 1.0
 
 ApplicationWindow {
@@ -18,7 +19,7 @@ ApplicationWindow {
         width: parent.width * 0.45
 
         Text {
-            text: "Status: " + capture.status
+            text: "Status: "
         }
 
         Button {
@@ -39,15 +40,18 @@ ApplicationWindow {
                 capture.stop();
             }
         }
-        Image {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            source: "image://images/"
-            cache: false
+        Camera {
+            id: camera
         }
-    }
-
-    Capture {
-        id: capture
+        MyFilter {
+            id: filter
+            // set properties, they can also be animated
+            // onFinished: console.log("results of the computation: " + result)
+        }
+        VideoOutput {
+            source: camera
+            filters: [ filter ]
+            anchors.fill: parent
+        }
     }
 }
