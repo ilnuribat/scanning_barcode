@@ -2,13 +2,14 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.3
 import QtMultimedia 5.9
-import ru.dreamkas.phone 1.0
+
+import QZXing 2.3
 
 ApplicationWindow {
     visible: true
     width: 640
     height: 480
-    title: qsTr("Hello World")
+    title: qsTr("Scanning barcodes")
 
     ColumnLayout {
         anchors {
@@ -16,42 +17,64 @@ ApplicationWindow {
             bottom: parent.bottom
             horizontalCenter: parent.horizontalCenter
         }
-        width: parent.width * 0.45
+        width: parent.width
 
         Text {
-            text: "Status: "
+            id: status
+            text: "Looking for barcode"
         }
 
         Button {
             text: "start"
             onClicked: {
-                capture.start();
-            }
-        }
-        Button {
-            text: "capture"
-            onClicked: {
-                capture.capture();
+                camera.start();
             }
         }
         Button {
             text: "stop"
             onClicked: {
-                capture.stop();
+                camera.stop();
             }
         }
         Camera {
             id: camera
-        }
-        MyFilter {
-            id: filter
-            // set properties, they can also be animated
-            // onFinished: console.log("results of the computation: " + result)
+            focus {
+                focusMode: CameraFocus.FocusContinuous
+                focusPointMode: CameraFocus.FocusPointAuto
+            }
         }
         VideoOutput {
             source: camera
             filters: [ filter ]
-            anchors.fill: parent
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            autoOrientation: true
+        }
+        QZXingFilter {
+            id: filter
+            onDecodingFinished: {
+                console.log(succeeded, decodeTime)
+                if (!succeeded) {
+                    status.text = 'not found';
+                }
+            }
+            decoder {
+                tryHarder: true
+                enabledDecoders: QZXing.DecoderFormat_EAN_13
+                onTagFound: {
+                    console.log(tag);
+                    status.text = 'barcode found: ' + tag;
+                    camera.stop();
+                }
+            }
+            captureRect: {
+                // setup bindings
+                videoOutput.contentRect;
+                videoOutput.sourceRect;
+                return videoOutput.mapRectToSource(videoOutput.mapNormalizedRectToItem(Qt.rect(
+                    0, 0, 1, 1
+                )));
+            }
         }
     }
 }

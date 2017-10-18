@@ -1,11 +1,17 @@
-QT += qml quick multimedia
+TEMPLATE = app
 
-CONFIG += c++11
+QT += qml quick
 
-SOURCES += main.cpp \
-    capture.cpp \
-    myvideosurface.cpp \
-    imageprovider.cpp
+CONFIG += c++11 qzxing_multimedia
+
+CONFIG(debug, debug|release) {
+    CONFIG+=qml_debug
+} else {
+    DEFINES += QT_NO_DEBUG
+    DEFINES += QT_NO_DEBUG_OUTPUT
+}
+
+SOURCES += main.cpp
 
 RESOURCES += qml.qrc \
     images.qrc
@@ -36,10 +42,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 include(QZXing/QZXing.pri)
 
-HEADERS += \
-    capture.h \
-    myvideosurface.h \
-    imageprovider.h
+HEADERS +=
 
 DISTFILES += \
     android/AndroidManifest.xml \

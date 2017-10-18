@@ -89,6 +89,7 @@ public:
 #if QT_VERSION >= 0x040700
     static void registerQMLTypes();
 #endif //QT_VERSION >= Qt 4.7
+    static void registerQMLTypes_();
 
 #if  QT_VERSION >= 0x050000
     static void registerQMLImageProvider(QQmlEngine& view);
